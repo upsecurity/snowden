@@ -11,34 +11,33 @@ const (
 	NvdUrl = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 )
 
-func GetVulnerabilityByCveId(cveId string) (CveVulnerability, error) {
+func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 	var vulnerability CveVulnerability
 
 	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", NvdUrl, cveId))
 	if err != nil {
-		return vulnerability, err
+		return Vulnerability{}, err
 	}
 
 	fmt.Println(resp.Body)
 
 	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-
-		}
+		err = Body.Close()
 	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return vulnerability, err
+		return Vulnerability{}, err
 	}
 
 	err = json.Unmarshal(body, &vulnerability)
 	if err != nil {
-		return vulnerability, err
+		return Vulnerability{}, err
 	}
 
-	return vulnerability, nil
+	vulnModel := modelVulnerability(vulnerability)
+
+	return vulnModel, nil
 }
 
 func GetVulnerabilityByCweId(cweId string) (string, error) {
@@ -95,4 +94,12 @@ type CveVulnerability struct {
 			} `json:"references"`
 		} `json:"cve"`
 	} `json:"vulnerabilities"`
+}
+
+func modelVulnerability(vuln CveVulnerability) Vulnerability {
+	var vulnerability Vulnerability
+
+	vulnerability = vuln.Vulnerabilities[0]
+
+	return vulnerability
 }

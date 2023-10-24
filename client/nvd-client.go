@@ -19,8 +19,6 @@ func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 		return Vulnerability{}, err
 	}
 
-	fmt.Println(resp.Body)
-
 	defer func(Body io.ReadCloser) {
 		err = Body.Close()
 	}(resp.Body)

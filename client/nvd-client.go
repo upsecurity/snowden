@@ -5,16 +5,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-)
-
-const (
-	NvdUrl = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+	"os"
 )
 
 func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 	var vulnerability CveVulnerability
+	nvdUrl := os.Getenv("NVD_URL")
 
-	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", NvdUrl, cveId))
+	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", nvdUrl, cveId))
 	if err != nil {
 		return Vulnerability{}, err
 	}
@@ -36,34 +34,6 @@ func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 	vulnModel := modelVulnerability(vulnerability)
 
 	return vulnModel, nil
-}
-
-func GetVulnerabilityByCweId(cweId string) (string, error) {
-	var vulnerability string
-
-	resp, err := http.Get(fmt.Sprintf("%s/?cweId=%s", NvdUrl, cweId))
-	if err != nil {
-		return vulnerability, err
-	}
-
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-
-		}
-	}(resp.Body)
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return vulnerability, err
-	}
-
-	err = json.Unmarshal(body, &vulnerability)
-	if err != nil {
-		return vulnerability, err
-	}
-
-	return vulnerability, nil
 }
 
 type CveVulnerability struct {

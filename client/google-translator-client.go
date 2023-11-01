@@ -2,16 +2,13 @@ package client
 
 import (
 	"log"
+	"os"
 
 	"github.com/st3v/translator/google"
 )
 
-const (
-	GoogleApiKey = ""
-)
-
 func Translate(text string) string {
-	translator := google.NewTranslator(GoogleApiKey)
+	translator := google.NewTranslator(os.Getenv("GOOGLE_API_KEY"))
 
 	translation, err := translator.Translate(text, "en", "pt")
 	if err != nil {

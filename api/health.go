@@ -5,7 +5,7 @@ import (
 )
 
 type HealthResponse struct {
-	Status string
+	Status string `json:"status"`
 }
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) error {

@@ -12,11 +12,7 @@ import (
 func GetVulnerabilityByCveId(cveId string) (model.Vulnerability, error) {
 	var vulnerability CveVulnerability
 	nvdUrl := config.GetEnv("NVD_URL")
-
-	url := fmt.Sprintf("%s?cveId=%s", nvdUrl, cveId)
-	fmt.Println(url)
-
-	resp, err := http.Get(url)
+	resp, err := http.Get(fmt.Sprintf("%s?cveId=%s", nvdUrl, cveId))
 
 	if err != nil {
 		return model.Vulnerability{}, err

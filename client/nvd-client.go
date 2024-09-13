@@ -5,14 +5,18 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+	"snowden/config"
 )
 
 func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 	var vulnerability CveVulnerability
-	nvdUrl := os.Getenv("NVD_URL")
+	nvdUrl := config.GetEnv("NVD_URL")
 
-	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", nvdUrl, cveId))
+	url := fmt.Sprintf("%s?cveId=%s", nvdUrl, cveId)
+	fmt.Println(url)
+
+	resp, err := http.Get(url)
+
 	if err != nil {
 		return Vulnerability{}, err
 	}
@@ -65,9 +69,7 @@ type CveVulnerability struct {
 }
 
 func modelVulnerability(vuln CveVulnerability) Vulnerability {
-	var vulnerability Vulnerability
-
-	vulnerability = vuln.Vulnerabilities[0]
+	vulnerability := vuln.Vulnerabilities[0]
 
 	return vulnerability
 }

@@ -1,4 +1,4 @@
-package client
+package model
 
 type Vulnerability struct {
 	Cve struct {

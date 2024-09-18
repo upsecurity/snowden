@@ -1,6 +1,6 @@
-package model
+package nvd
 
-type Vulnerability struct {
+type NvdModel struct {
 	Cve struct {
 		ID               string `json:"id"`
 		SourceIdentifier string `json:"sourceIdentifier"`

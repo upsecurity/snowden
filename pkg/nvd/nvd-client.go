@@ -1,21 +1,20 @@
-package client
+package nvd
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"snowden/client/model"
 	"snowden/config"
 )
 
-func GetVulnerabilityByCveId(cveId string) (model.Vulnerability, error) {
-	var vulnerability CveVulnerability
+func GetNvdModelByCveId(cveId string) (NvdModel, error) {
+	var vulnerability CveNvdModel
 	nvdUrl := config.GetEnv("NVD_URL")
 	resp, err := http.Get(fmt.Sprintf("%s?cveId=%s", nvdUrl, cveId))
 
 	if err != nil {
-		return model.Vulnerability{}, err
+		return NvdModel{}, err
 	}
 
 	defer func(Body io.ReadCloser) {
@@ -24,20 +23,20 @@ func GetVulnerabilityByCveId(cveId string) (model.Vulnerability, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return model.Vulnerability{}, err
+		return NvdModel{}, err
 	}
 
 	err = json.Unmarshal(body, &vulnerability)
 	if err != nil {
-		return model.Vulnerability{}, err
+		return NvdModel{}, err
 	}
 
-	vulnModel := modelVulnerability(vulnerability)
+	vulnModel := modelNvdModel(vulnerability)
 
 	return vulnModel, nil
 }
 
-type CveVulnerability struct {
+type CveNvdModel struct {
 	ResultsPerPage  int    `json:"resultsPerPage"`
 	StartIndex      int    `json:"startIndex"`
 	TotalResults    int    `json:"totalResults"`
@@ -65,7 +64,7 @@ type CveVulnerability struct {
 	} `json:"vulnerabilities"`
 }
 
-func modelVulnerability(vuln CveVulnerability) model.Vulnerability {
+func modelNvdModel(vuln CveNvdModel) NvdModel {
 	vulnerability := vuln.Vulnerabilities[0]
 
 	return vulnerability

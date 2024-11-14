@@ -36,36 +36,39 @@ func GetNvdModelByCveId(cveId string) (NvdModel, error) {
 	return vulnModel, nil
 }
 
-type CveNvdModel struct {
-	ResultsPerPage  int    `json:"resultsPerPage"`
-	StartIndex      int    `json:"startIndex"`
-	TotalResults    int    `json:"totalResults"`
-	Format          string `json:"format"`
-	Version         string `json:"version"`
-	Timestamp       string `json:"timestamp"`
-	Vulnerabilities []struct {
-		Cve struct {
-			ID               string `json:"id"`
-			SourceIdentifier string `json:"sourceIdentifier"`
-			Published        string `json:"published"`
-			LastModified     string `json:"lastModified"`
-			VulnStatus       string `json:"vulnStatus"`
-			Descriptions     []struct {
-				Lang  string `json:"lang"`
-				Value string `json:"value"`
-			} `json:"descriptions"`
-			Metrics struct {
-			} `json:"metrics"`
-			References []struct {
-				URL    string `json:"url"`
-				Source string `json:"source"`
-			} `json:"references"`
-		} `json:"cve"`
-	} `json:"vulnerabilities"`
+func GetNvdModelByCweId(cweId string) (CWENVDModel, error) {
+	var vuln CWENVDModel
+	nvdUrl := config.GetEnv("NVD_URL")
+	resp, err := http.Get(fmt.Sprintf("%s?cweId=%s", nvdUrl, cweId))
+
+	if err != nil {
+		return CWENVDModel{}, err
+	}
+
+	defer func(Body io.ReadCloser) {
+		err = Body.Close()
+	}(resp.Body)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return CWENVDModel{}, err
+	}
+
+	err = json.Unmarshal(body, &vuln)
+	if err != nil {
+		return CWENVDModel{}, err
+	}
+
+	//vulnModel := modelCweModel(vuln)
+	return vuln, nil
 }
 
 func modelNvdModel(vuln CveNvdModel) NvdModel {
 	vulnerability := vuln.Vulnerabilities[0]
 
 	return vulnerability
+}
+
+func modelCweModel(vuln CWENVDModel) CWE {
+	return vuln.Vulnerabilities[0].Cve
 }

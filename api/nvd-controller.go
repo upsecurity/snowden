@@ -15,3 +15,14 @@ func ReadVulnerabilityByCve(w http.ResponseWriter, r *http.Request) error {
 
 	return WriteJson(w, http.StatusOK, vulnerability)
 }
+
+func ReadVulnerabilityByCwe(w http.ResponseWriter, r *http.Request) error {
+	cweId := r.URL.Query().Get("cweId")
+
+	vulnerabilities, err := nvd.GetNvdModelByCweId(cweId)
+	if err != nil {
+		return WriteJson(w, http.StatusBadRequest, ApiError{Error: err.Error()})
+	}
+
+	return WriteJson(w, http.StatusOK, vulnerabilities)
+}

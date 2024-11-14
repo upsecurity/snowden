@@ -14,7 +14,7 @@ func (s *APIServer) Run() {
 
 	router.HandleFunc("/api/v1/health", config.LogHandler(makeHTTPHandleFunc(HealthHandler))).Methods("GET")
 	router.HandleFunc("/api/v1/vulnerability/cve", config.LogHandler(makeHTTPHandleFunc(ReadVulnerabilityByCve))).Methods("GET")
-	// router.HandleFunc("/api/v1/vulnerability/cwe", config.LogHandler(makeHTTPHandleFunc(ReadVulnerabilityByCwe))).Methods("GET")
+	router.HandleFunc("/api/v1/vulnerability/cwe", config.LogHandler(makeHTTPHandleFunc(ReadVulnerabilityByCwe))).Methods("GET")
 
 	err := http.ListenAndServe(s.Port, router)
 	if err != nil {

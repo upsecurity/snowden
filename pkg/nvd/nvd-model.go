@@ -11,8 +11,7 @@ type NvdModel struct {
 			Lang  string `json:"lang"`
 			Value string `json:"value"`
 		} `json:"descriptions"`
-		Metrics struct {
-		} `json:"metrics"`
+		Metrics    Metrics `json:"metrics"`
 		References []struct {
 			URL    string `json:"url"`
 			Source string `json:"source"`

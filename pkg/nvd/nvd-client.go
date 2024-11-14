@@ -59,7 +59,6 @@ func GetNvdModelByCweId(cweId string) (CWENVDModel, error) {
 		return CWENVDModel{}, err
 	}
 
-	//vulnModel := modelCweModel(vuln)
 	return vuln, nil
 }
 
@@ -67,8 +66,4 @@ func modelNvdModel(vuln CveNvdModel) NvdModel {
 	vulnerability := vuln.Vulnerabilities[0]
 
 	return vulnerability
-}
-
-func modelCweModel(vuln CWENVDModel) CWE {
-	return vuln.Vulnerabilities[0].Cve
 }

@@ -6,15 +6,16 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"snowden/client/model"
 )
 
-func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
-	var vulnerability CveVulnerability
+func GetVulnerabilityByCweId(cweId string) (model.Vulnerability, error) {
+	var vulnerability model.CompleteCwe
 	nvdUrl := os.Getenv("NVD_URL")
 
-	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", nvdUrl, cveId))
+	resp, err := http.Get(fmt.Sprintf("%s/?cweId=%s", nvdUrl, cweId))
 	if err != nil {
-		return Vulnerability{}, err
+		return model.Vulnerability{}, err
 	}
 
 	defer func(Body io.ReadCloser) {
@@ -23,51 +24,43 @@ func GetVulnerabilityByCveId(cveId string) (Vulnerability, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Vulnerability{}, err
+		return model.Vulnerability{}, err
 	}
 
 	err = json.Unmarshal(body, &vulnerability)
 	if err != nil {
-		return Vulnerability{}, err
+		return model.Vulnerability{}, err
 	}
 
-	vulnModel := modelVulnerability(vulnerability)
+	vulnModel := model.MarshallCweVulnerability(vulnerability)
 
 	return vulnModel, nil
 }
 
-type CveVulnerability struct {
-	ResultsPerPage  int    `json:"resultsPerPage"`
-	StartIndex      int    `json:"startIndex"`
-	TotalResults    int    `json:"totalResults"`
-	Format          string `json:"format"`
-	Version         string `json:"version"`
-	Timestamp       string `json:"timestamp"`
-	Vulnerabilities []struct {
-		Cve struct {
-			ID               string `json:"id"`
-			SourceIdentifier string `json:"sourceIdentifier"`
-			Published        string `json:"published"`
-			LastModified     string `json:"lastModified"`
-			VulnStatus       string `json:"vulnStatus"`
-			Descriptions     []struct {
-				Lang  string `json:"lang"`
-				Value string `json:"value"`
-			} `json:"descriptions"`
-			Metrics struct {
-			} `json:"metrics"`
-			References []struct {
-				URL    string `json:"url"`
-				Source string `json:"source"`
-			} `json:"references"`
-		} `json:"cve"`
-	} `json:"vulnerabilities"`
-}
+func GetVulnerabilityByCveId(cveId string) ([]model.Vulnerability, error) {
+	var vulnerability model.CompleteCve
+	nvdUrl := os.Getenv("NVD_URL")
 
-func modelVulnerability(vuln CveVulnerability) Vulnerability {
-	var vulnerability Vulnerability
+	resp, err := http.Get(fmt.Sprintf("%s/?cveId=%s", nvdUrl, cveId))
+	if err != nil {
+		return []model.Vulnerability{}, err
+	}
 
-	vulnerability = vuln.Vulnerabilities[0]
+	defer func(Body io.ReadCloser) {
+		err = Body.Close()
+	}(resp.Body)
 
-	return vulnerability
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return []model.Vulnerability{}, err
+	}
+
+	err = json.Unmarshal(body, &vulnerability)
+	if err != nil {
+		return []model.Vulnerability{}, err
+	}
+
+	vulnModel := model.MarshallCveVulnerability(vulnerability)
+
+	return vulnModel, nil
 }

@@ -1,16 +1,4 @@
 github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
-github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
-github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
-github.com/mattn/go-runewidth v0.0.9 h1:Lm995f3rfxdpd6TSmuVCHVb/QhupuXlYr8sCI/QdE+0=
-github.com/mattn/go-runewidth v0.0.9/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
-github.com/olekukonko/tablewriter v0.0.5 h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=
-github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
-github.com/parsiya/semgrep_go v0.0.0-20240311225952-22c5fc7374a5 h1:jMPg6iB6Grhe0WJVvA3V5tR3l0QVFgM7Qyx43i/XuuA=
-github.com/parsiya/semgrep_go v0.0.0-20240311225952-22c5fc7374a5/go.mod h1:t5dfM7aVJpMdJqNwgMU2vqXxJiqPSk7/mVdLAsBJkfQ=
-github.com/st3v/tracerr v0.0.0-20141227205252-07f754d5ee02 h1:N4gPC+l3F9FhkHcPDW7rmpaXI1ct4kZvNlfw2Ojw0LI=
-github.com/st3v/tracerr v0.0.0-20141227205252-07f754d5ee02/go.mod h1:izgUcLNrKHeZKj7Lve99NNN5G8+2H0mBtAG8AsZuKpo=
-github.com/st3v/translator v0.0.0-20170509165537-d13056a59297 h1:wIxQcRyXYM7mQ1xTnJmlU9plIn4QFZHEjDzX4fZKCBs=
-github.com/st3v/translator v0.0.0-20170509165537-d13056a59297/go.mod h1:nOlf149jpn2UBsed03g92AudGFfXu4tKt/QdEKpnDzU=

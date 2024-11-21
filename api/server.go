@@ -8,9 +8,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (s *APIServer) Run() {
+func (s *Server) Run() {
 	router := mux.NewRouter()
-	router.HandleFunc("/", config.LogHandler(makeHTTPHandleFunc(SlashHandler))).Methods("GET")
 
 	router.HandleFunc("/api/v1/health", config.LogHandler(makeHTTPHandleFunc(HealthHandler))).Methods("GET")
 	router.HandleFunc("/api/v1/vulnerability/cve", config.LogHandler(makeHTTPHandleFunc(ReadVulnerabilityByCve))).Methods("GET")
@@ -22,12 +21,8 @@ func (s *APIServer) Run() {
 	}
 }
 
-func SlashHandler(w http.ResponseWriter, r *http.Request) error {
-	return WriteJson(w, http.StatusOK, API{message: "Welcome to Snowden API"})
-}
-
-func NewApiServer(port string) *APIServer {
-	return &APIServer{
+func NewApiServer(port string) *Server {
+	return &Server{
 		Port: port,
 	}
 }
@@ -42,7 +37,7 @@ func WriteJson(w http.ResponseWriter, status int, value any) error {
 func makeHTTPHandleFunc(f apiFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
-			err := WriteJson(w, http.StatusBadRequest, ApiError{Error: err.Error()})
+			err := WriteJson(w, http.StatusBadRequest, Error{Error: err.Error()})
 			if err != nil {
 				return
 			}
@@ -50,16 +45,12 @@ func makeHTTPHandleFunc(f apiFunc) http.HandlerFunc {
 	}
 }
 
-type APIServer struct {
+type Server struct {
 	Port string
 }
 
 type apiFunc func(w http.ResponseWriter, r *http.Request) error
 
-type ApiError struct {
+type Error struct {
 	Error string `json:"error"`
-}
-
-type API struct {
-	message string
 }
